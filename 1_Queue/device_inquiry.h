@@ -23,3 +23,20 @@ void print_available_devices(){
     p++;
   }
 }
+
+// selecting a device based on platform and device number
+sycl::queue get_queue(int platform_index = 0, int device_index = 0){
+  // get the available platforms
+  auto platforms = sycl::platform::get_platforms();
+
+  // select the platform based on the platform index
+  auto selected_platform = platforms[platform_index];
+
+  // get the devices on the selected platform
+  auto devices = selected_platform.get_devices();
+  auto selected_device = devices[device_index];
+
+  // create the queue based on the selected device
+  sycl::queue q(selected_device);
+  return q;
+}

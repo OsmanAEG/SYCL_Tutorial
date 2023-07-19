@@ -11,15 +11,15 @@
 #include "../0_Helper_Functions/verify.h"
 
 // implementation of an nd_range matrix multiplication in SYCL
-template<typename Queue_type, typename Scalar_type>
-auto nd_range_matrix_multiplication(Queue_type Q,
-                                    Scalar_type* A,
-                                    Scalar_type* B,
-                                    Scalar_type* C,
-                                    size_t& M,
-                                    size_t& N,
-                                    size_t& P,
-                                    int b){
+template<typename Queue_T, typename Scalar_T, typename Int_T, typename Size_T>
+auto nd_range_matrix_multiplication(Queue_T Q,
+                                    Scalar_T* A,
+                                    Scalar_T* B,
+                                    Scalar_T* C,
+                                    Int_T& M,
+                                    Int_T& N,
+                                    Int_T& P,
+                                    Size_T b){
   auto event = Q.submit([&](sycl::handler& h){
     // global range and local work group size
     auto global = sycl::range<2>(M, P);

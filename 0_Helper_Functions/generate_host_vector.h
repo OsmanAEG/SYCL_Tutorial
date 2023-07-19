@@ -1,11 +1,12 @@
 #include <vector>
 
-template<typename Scalar_type, typename Int_type>
-auto generate_filled_host_vector(Int_type N){
-  std::vector<Scalar_type> host_vector(N);
+// generate a vector on host, filled with random numbers
+template<typename Scalar_T, typename Int_T>
+auto generate_filled_host_vector(Int_T N){
+  std::vector<Scalar_T> host_vector(N);
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<Scalar_type> dis(0.0, 100.0);
+  std::uniform_real_distribution<Scalar_T> dis(0.0, 100.0);
 
   auto rng = [&]() {
     return dis(gen);
@@ -15,9 +16,10 @@ auto generate_filled_host_vector(Int_type N){
   return host_vector;
 }
 
-template<typename Scalar_type, typename Int_type>
-auto generate_empty_host_vector(Int_type N){
-  std::vector<Scalar_type> host_vector(N);
+// generate a vector on host, filled with zeros
+template<typename Scalar_T, typename Int_T>
+auto generate_empty_host_vector(Int_T N){
+  std::vector<Scalar_T> host_vector(N);
   std::fill(host_vector.begin(), host_vector.end(), 0.0);
   return host_vector;
 }

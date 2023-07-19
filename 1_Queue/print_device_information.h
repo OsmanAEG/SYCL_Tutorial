@@ -2,8 +2,8 @@
 #include <iostream>
 
 // print device information
-template<typename Queue_type>
-void print_device_information(Queue_type& Q){
+template<typename Queue_T>
+void print_device_information(Queue_T& Q){
   std::cout << "-------------- DEVICE INFORMATION --------------\n"
             << "NAME: "
             << Q.get_device().template get_info<sycl::info::device::name>()

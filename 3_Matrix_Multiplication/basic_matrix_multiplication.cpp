@@ -10,33 +10,6 @@
 #include "../0_Helper_Functions/time_recorder.h"
 #include "../0_Helper_Functions/verify.h"
 
-// implementation of a basic matrix multiplication in SYCL
-template<typename Queue_type, typename Scalar_type>
-auto basic_matrix_multiplication(Queue_type Q,
-                                 Scalar_type* A,
-                                 Scalar_type* B,
-                                 Scalar_type* C,
-                                 size_t& M,
-                                 size_t& N,
-                                 size_t& P){
-  auto event = Q.submit([&](sycl::handler& h){
-    h.parallel_for(sycl::range<2>{M, P}, [=](sycl::id<2> idx){
-      const int i = idx[0];
-      const int j = idx[1];
-
-      double c_ij = 0.0;
-
-      for(int k = 0; k < N; ++k){
-        c_ij += A[i*N + k] * B[k*P + j];
-      }
-
-      C[i*P + j] = c_ij;
-    });
-  });
-
-  return event;
-}
-
 int main(){
   // create time recorder
   auto timer = TimeRecorder();
@@ -69,7 +42,7 @@ int main(){
   timer.start();
 
   auto event = Q.submit([&](sycl::handler& h){
-    h.parallel_for(sycl::range<2>{M, P}, [=](sycl::id<2> idx){
+    h.parallel_for(sycl::range<2>(M, P), [=](sycl::id<2> idx){
       const int i = idx[0];
       const int j = idx[1];
 

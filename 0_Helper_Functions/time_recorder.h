@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iostream>
 
+// class used with the purpose of recording execution time
 class TimeRecorder{
 public:
   TimeRecorder() : last_registered_time(0.0){}

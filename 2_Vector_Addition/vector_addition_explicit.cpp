@@ -43,7 +43,7 @@ int main(){
   Q.memcpy(&C_host[0], C_device, N*sizeof(double)).wait();
 
   // checking the results
-  for(size_t i = 0; i < N; i++){
+  for(int i = 0; i < N; i++){
     assert(std::fabs(C_host[i] - (A_host[i] + B_host[i])) < 1e-6);
   }
 

@@ -40,18 +40,19 @@ int main(){
   // copying data from host to device
   Q.memcpy(A_device, &A_host[0], N*sizeof(double));
   Q.memcpy(B_device, &B_host[0], N*sizeof(double));
+  Q.wait();
 
   // executing the kernel
-  Q.submit([&](sycl::handler& h){
+  auto event = Q.submit([&](sycl::handler& h){
     h.parallel_for(sycl::range<1>(N), [=](sycl::id<1> idx){
       C_device[idx] = A_device[idx] + B_device[idx];
     });
   });
 
-  Q.wait(); // waiting for the kernel to finish
+  event.wait();
 
   // copying data from device to host
-  Q.memcpy(&C_host[0], C_device, N*sizeof(double));
+  Q.memcpy(&C_host[0], C_device, N*sizeof(double)).wait();
 
   // checking the results
   for(size_t i = 0; i < N; i++){

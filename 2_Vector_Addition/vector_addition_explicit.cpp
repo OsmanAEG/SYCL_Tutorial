@@ -55,7 +55,7 @@ int main(){
 
   // checking the results
   for(size_t i = 0; i < N; i++){
-    assert(C_host[i] == A_host[i] + B_host[i]);
+    assert(std::fabs(C_host[i] - (A_host[i] + B_host[i])) < 1e-8);
   }
 
   std::cout << "The vector addition was successful!" << std::endl;

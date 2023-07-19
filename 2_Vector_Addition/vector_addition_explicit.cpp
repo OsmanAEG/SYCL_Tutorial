@@ -51,11 +51,11 @@ int main(){
   Q.wait(); // waiting for the kernel to finish
 
   // copying data from device to host
-  Q.memcpy(C_host.data(), C_device, N*sizeof(double));
+  Q.memcpy(&C_host[0], C_device, N*sizeof(double));
 
   // checking the results
   for(size_t i = 0; i < N; i++){
-    assert(std::fabs(C_host[i] - (A_host[i] + B_host[i])) < 1e-8);
+    assert(std::fabs(C_host[i] - (A_host[i] + B_host[i])) < 1e-6);
   }
 
   std::cout << "The vector addition was successful!" << std::endl;

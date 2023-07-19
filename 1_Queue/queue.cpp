@@ -9,7 +9,7 @@ int main(){
   print_device_information(Q);*/
 
   // inquiring about all available devices
-  print_available_devices();
+  //print_available_devices();
 
   // select queue based on platform and device number
   auto Q = get_queue(0, 0);

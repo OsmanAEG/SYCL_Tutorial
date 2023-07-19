@@ -7,8 +7,40 @@
 #include "../1_Queue/print_device_information.h"
 #include "../1_Queue/device_inquiry.h"
 #include "../0_Helper_Functions/generate_host_vector.h"
+#include "../0_Helper_Functions/time_recorder.h"
+#include "../0_Helper_Functions/verify.h"
+
+// implementation of a basic matrix multiplication in SYCL
+template<typename Queue_type, typename Scalar_type>
+auto basic_matrix_multiplication(Queue_type Q,
+                                 Scalar_type* A,
+                                 Scalar_type* B,
+                                 Scalar_type* C,
+                                 size_t& M,
+                                 size_t& N,
+                                 size_t& P){
+  auto event = Q.submit([&](sycl::handler& h){
+    h.parallel_for(sycl::range<2>{M, P}, [=](sycl::id<2> idx){
+      const int i = idx[0];
+      const int j = idx[1];
+
+      double c_ij = 0.0;
+
+      for(int k = 0; k < N; ++k){
+        c_ij += A[i*N + k] * B[k*P + j];
+      }
+
+      C[i*P + j] = c_ij;
+    });
+  });
+
+  return event;
+}
 
 int main(){
+  // create time recorder
+  auto timer = TimeRecorder();
+
   // select queue based on platform and device number
   auto Q = get_queue(0, 0);
   print_device_information(Q);
@@ -32,7 +64,10 @@ int main(){
   Q.memcpy(B_device, &B_host[0], N*P*sizeof(double));
   Q.wait();
 
-  // executing the kernel
+  // basic matrix multiplication
+  std::cout << "Basic matrix multiplication" << std::endl;
+  timer.start();
+
   auto event = Q.submit([&](sycl::handler& h){
     h.parallel_for(sycl::range<2>{M, P}, [=](sycl::id<2> idx){
       const int i = idx[0];
@@ -48,23 +83,16 @@ int main(){
     });
   });
 
+  timer.end();
+  timer.print_last_registered_time();
   event.wait();
+  std::cout << "---------------------------" << std::endl;
 
   // copying data from device to host
   Q.memcpy(&C_host[0], C_device, M*P*sizeof(double)).wait();
 
   // checking the results
-  for(int i = 0; i < M; i++){
-    for(int j = 0; j < P; j++){
-      double c_ij = 0.0;
-
-      for(int k = 0; k < N; k++){
-        c_ij += A_host[i*N + k] * B_host[k*P + j];
-      }
-
-      assert(std::fabs(C_host[i*P + j] - c_ij) < 1e-6);
-    }
-  }
+  verify_matrix_multiplication(A_host, B_host, C_host, M, N, P);
 
   std::cout << "The matrix multiplication was successful!" << std::endl;
 }

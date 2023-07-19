@@ -4,9 +4,13 @@
 // print device information
 template<typename Queue_type>
 void print_device_information(Queue_type& Q){
-  std::cout << "DEVICE NAME: "
+  std::cout << "-------------- DEVICE INFORMATION --------------\n"
+            << "NAME: "
             << Q.get_device().template get_info<sycl::info::device::name>()
-            << "\nDEVICE VENDOR: "
+            << "\nVENDOR: "
             << Q.get_device().template get_info<sycl::info::device::vendor>()
-            << "\n" << std::endl;
+            << "\nMAX WORKGROUP SIZE: "
+            << Q.get_device().template get_info<sycl::info::device::max_work_group_size>()
+            << "\n" << "------------------------------------------------\n"
+            << std::endl;
 }

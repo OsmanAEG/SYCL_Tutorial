@@ -1,5 +1,4 @@
 #include <CL/sycl.hpp>
-#include <assert.h>
 #include <vector>
 #include <random>
 #include <algorithm>
@@ -7,6 +6,7 @@
 #include "../1_Queue/print_device_information.h"
 #include "../1_Queue/device_inquiry.h"
 #include "../0_Helper_Functions/generate_host_vector.h"
+#include "../0_Helper_Functions/verify.h"
 
 int main(){
   // select queue based on platform and device number
@@ -43,9 +43,7 @@ int main(){
   Q.memcpy(&C_host[0], C_device, N*sizeof(double)).wait();
 
   // checking the results
-  for(int i = 0; i < N; i++){
-    assert(std::fabs(C_host[i] - (A_host[i] + B_host[i])) < 1e-6);
-  }
+  verify_vector_addition(A_host, B_host, C_host, N);
 
   std::cout << "The vector addition was successful!" << std::endl;
 }

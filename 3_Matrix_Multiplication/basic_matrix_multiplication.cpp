@@ -19,9 +19,9 @@ int main(){
   print_device_information(Q);
 
   // create vectors on host (CPU)
-  size_t M = 1 << 9;
-  size_t N = 1 << 8;
-  size_t P = 1 << 5;
+  size_t M = 1 << 10;
+  size_t N = 1 << 10;
+  size_t P = 1 << 10;
 
   auto A_host = generate_filled_host_vector<double>(M*N);
   auto B_host = generate_filled_host_vector<double>(N*P);
@@ -56,9 +56,9 @@ int main(){
     });
   });
 
+  event.wait();
   timer.end();
   timer.print_last_registered_time();
-  event.wait();
   std::cout << "---------------------------" << std::endl;
 
   // copying data from device to host

@@ -50,9 +50,9 @@ int main(){
   print_device_information(Q);
 
   // create vectors on host (CPU)
-  size_t M = 1 << 12;
-  size_t N = 1 << 12;
-  size_t P = 1 << 12;
+  size_t M = 1 << 10;
+  size_t N = 1 << 10;
+  size_t P = 1 << 10;
 
   auto A_host = generate_filled_host_vector<double>(M*N);
   auto B_host = generate_filled_host_vector<double>(N*P);
